@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prof. Humberto - Física e Robótica</title>
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/prop-types@15.7.2/umd/prop-types.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/recharts@2.5.0/umd/Recharts.min.js"></script>
+    <script src="https://unpkg.com/@material-ui/core@4.12.4/umd/material-ui.development.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        #error-container {
+            color: orange;
+            font-size: 16px;
+            margin: 12px;
+            min-height: 120px;
+            overflow-y: auto;
+            border: 1px solid orange;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #ff96000d;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="artifact_react"></div>
+    <div id="error-container"></div>
+    <script type="text/babel">
+        try {
+            function App() {
+                const { useState } = React;
+
+                const TABS = [
+                    "Início",
+                    "Monteiro",
+                    "Antônio Afonso",
+                    "ECOMPO",
+                    "SEPP",
+                    "Aulas Particulares",
+                ];
+
+                const SUBTABS = ["1a EM", "2a EM", "3a EM"];
+
+                const PASSWORDS = {
+                    Monteiro: "lobatinho",
+                    "Antônio Afonso": "Afonso",
+                    ECOMPO: "química",
+                    SEPP: "sousepp",
+                };
+
+                const [activeTab, setActiveTab] = useState("Início");
+                const [unlocked, setUnlocked] = useState({});
+                const [passwordInputs, setPasswordInputs] = useState({});
+                const [subTabAA, setSubTabAA] = useState("1a EM");
+                const [subTabECOMPO, setSubTabECOMPO] = useState("1a EM");
+
+                const nuclearDoc = (
+                    <div className="space-y-4">
+                        <h4 className="text-xl font-semibold">Tema Central: Física Nuclear e de Partículas</h4>
+                        <p>
+                            Energia, Destruição e o Incomensurável.
+                        </p>
+                        <div className="bg-gray-50 border rounded p-3">
+                            <p className="font-medium">Slides</p>
+                            <ul className="list-disc ml-6 space-y-1">
+                                <li>
+                                    <strong>9 | O RISCO:</strong> Exponencialmente mais poderosa que a Bomba A. O teste
+                                    "Ivy Mike" (1952) estabeleceu o recorde de poder explosivo. Exemplos: Tragédias
+                                    como Chernobyl (1986) e Fukushima (2011). Consequências: Liberação de material
+                                    radioativo, evacuações e criação de zonas de exclusão. Lembrete da necessidade de
+                                    cautela extrema e segurança infalível.
+                                </li>
+                                <li>
+                                    <strong>10 | O INCOMENSURÁVEL:</strong> Conclusão: Além da energia e da guerra, a Física
+                                    de Partículas busca os constituintes mais básicos da matéria (CERN, Bóson de Higgs).
+                                    Mensagem final: A energia nuclear é uma aplicação complexa, mas a pesquisa
+                                    fundamental continua a explorar as leis do universo.
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="space-y-2">
+                            <p className="font-medium">Questões de Estudo</p>
+                            <ol className="list-decimal ml-6 space-y-3">
+                                <li>
+                                    Explique o processo de fusão nuclear. Onde ela ocorre naturalmente?
+                                </li>
+                                <li>
+                                    Qual a diferença entre reator nuclear e bomba atômica?
+                                </li>
+                            </ol>
+                        </div>
+                        <div className="space-y-3">
+                            <p className="font-medium">Propostas de Desenvolvimento</p>
+                            <ol className="list-decimal ml-6 space-y-3">
+                                <li>
+                                    <strong>Fissão vs. Fusão Nuclear:</strong> Diferencie os processos. Indique qual é a
+                                    maior promessa para uma fonte de energia limpa, justificando.
+                                </li>
+                                <li>
+                                    <strong>Segurança Nuclear:</strong> Além de acidentes, discuta o principal desafio
+                                    ambiental e de segurança de longo prazo na operação normal de usinas de fissão e por
+                                    que isso é uma questão ética para futuras gerações.
+                                </li>
+                                <li>
+                                    <strong>Projeto Manhattan e Bomba H:</strong> Descreva como a Bomba H (fusão) se
+                                    diferencia da Bomba A (fissão) e o papel da Bomba A no mecanismo da Bomba H.
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                );
+
+                const downloadMaterials = [
+                    {
+                        name: "Plano_de_Aula_9o_Ano.pdf",
+                        description: "Esboço do semestre",
+                        link: "#", // Substitua por seu link real
+                    },
+                    {
+                        name: "Lista_Exercicios_Cinematica.pdf",
+                        description: "Exercícios de reforço",
+                        link: "#", // Substitua por seu link real
+                    },
+                    {
+                        name: "Roteiro_Experimento_Queda_Livre.pdf",
+                        description: "Laboratório",
+                        link: "#", // Substitua por seu link real
+                    },
+                ];
+
+                function LockedSection({ tab, children }) {
+                    const needsPassword = PASSWORDS[tab] !== undefined;
+                    const isUnlocked = unlocked[tab];
+
+                    if (!needsPassword) return <>{children}</>;
+
+                    if (isUnlocked) return <>{children}</>;
+
+                    return (
+                        <div className="max-w-md space-y-3">
+                            <p className="text-sm text-gray-600">
+                                Esta aba é protegida por senha. Dica: o assistente pode lembrar as senhas.
+                            </p>
+                            <input
+                                type="password"
+                                className="w-full border rounded px-3 py-2"
+                                placeholder="Digite a senha"
+                                value={passwordInputs[tab] || ""}
+                                onChange={(e) =>
+                                    setPasswordInputs((s) => ({ ...s, [tab]: e.target.value }))
+                                }
+                            />
+                            <button
+                                className="px-4 py-2 rounded bg-blue-600 text-white"
+                                onClick={() => {
+                                    if ((passwordInputs[tab] || "").trim() === PASSWORDS[tab]) {
+                                        setUnlocked((s) => ({ ...s, [tab]: true }));
+                                    } else {
+                                        alert("Senha incorreta.");
+                                    }
+                                }}
+                            >
+                                Desbloquear
+                            </button>
+                        </div>
+                    );
+                }
+
+                function SubTabs({ current, onChange }) {
+                    return (
+                        <div className="flex gap-2 mb-4 flex-wrap">
+                            {SUBTABS.map((t) => (
+                                <button
+                                    key={t}
+                                    className={
+                                        "px-3 py-1 rounded border " +
+                                        (current === t
+                                            ? "bg-blue-600 text-white border-blue-600"
+                                            : "bg-white text-gray-800 hover:bg-gray-50")
+                                    }
+                                    onClick={() => onChange(t)}
+                                >
+                                    {t}
+                                </button>
+                            ))}
+                        </div>
+                    );
+                }
+
+                function Content() {
+                    if (activeTab === "Início") {
+                        return (
+                            <div className="space-y-4">
+                                <h3 className="text-2xl font-bold">Prof. Humberto — Física e Robótica</h3>
+                                <p>
+                                    Qualificações e perfil: experiência em Física, Robótica e Programação; pós-graduação
+                                    em andamento; atuação em currículo interdisciplinar e aprendizagem baseada em
+                                    projetos.
+                                </p>
+                            </div>
+                        );
+                    }
+
+                    if (activeTab === "Monteiro") {
+                        return (
+                            <LockedSection tab="Monteiro">
+                                <h3 className="text-2xl font-semibold mb-2">Monteiro</h3>
+                                <p className="mb-4">Física para o 9º ano. Metodologias ativas, práticas e avaliações contínuas.</p>
+                                <div className="mt-6 space-y-4">
+                                    <h4 className="text-xl font-semibold">Materiais para download</h4>
+                                    {downloadMaterials.length > 0 ? (
+                                        <ul className="space-y-3">
+                                            {downloadMaterials.map((item, index) => (
+                                                <li key={index} className="flex items-center justify-between p-3 border rounded-md bg-gray-50">
+                                                    <div>
+                                                        <p className="font-medium">{item.name}</p>
+                                                        <p className="text-sm text-gray-600">{item.description}</p>
+                                                    </div>
+                                                    <a
+                                                        href={item.link}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="px-3 py-1 rounded bg-blue-600 text-white text-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        disabled={item.link === "#"}
+                                                    >
+                                                        Baixar
+                                                    </a>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        <p className="text-gray-600">Nenhum material disponível para download no momento.</p>
+                                    )}
+                                    <p className="text-sm text-gray-500">Para adicionar seus arquivos, edite o código na seção `downloadMaterials` e substitua `#` pelos links diretos para seus PDFs ou outros documentos.</p>
+                                </div>
+                            </LockedSection>
+                        );
+                    }
+
+                    if (activeTab === "Antônio Afonso") {
+                        return (
+                            <LockedSection tab="Antônio Afonso">
+                                <h3 className="text-2xl font-semibold mb-2">Antônio Afonso</h3>
+                                <p className="mb-4">Física para o Ensino Médio.</p>
+                                <SubTabs current={subTabAA} onChange={setSubTabAA} />
+                                {subTabAA === "1a EM" && (
+                                    <div>
+                                        <h4 className="font-semibold mb-1">1a EM</h4>
+                                        <p>Conteúdos: Cinemática, Vetores, Gráficos, Projetos introdutórios.</p>
+                                    </div>
+                                )}
+                                {subTabAA === "2a EM" && (
+                                    <div>
+                                        <h4 className="font-semibold mb-1">2a EM</h4>
+                                        <p>Conteúdos: Dinâmica, Trabalho e Energia, Impulso e Momento.</p>
+                                    </div>
+                                )}
+                                {subTabAA === "3a EM" && (
+                                    <div>
+                                        <h4 className="font-semibold mb-3">3a EM — Física Nuclear e de Partículas</h4>
+                                        {nuclearDoc}
+                                    </div>
+                                )}
+                            </LockedSection>
+                        );
+                    }
+
+                    if (activeTab === "ECOMPO") {
+                        return (
+                            <LockedSection tab="ECOMPO">
+                                <h3 className="text-2xl font-semibold mb-2">ECOMPO</h3>
+                                <p className="mb-4">Física para o Ensino Médio (ênfase em projetos e robótica).</p>
+                                <SubTabs current={subTabECOMPO} onChange={setSubTabECOMPO} />
+                                {subTabECOMPO === "1a EM" && (
+                                    <div>
+                                        <h4 className="font-semibold mb-1">1a EM</h4>
+                                        <p>Conteúdos: Cinemática, Vetores, Gráficos, Projetos introdutórios.</p>
+                                    </div>
+                                )}
+                                {subTabECOMPO === "2a EM" && (
+                                    <div>
+                                        <h4 className="font-semibold mb-1">2a EM</h4>
+                                        <p>Conteúdos: Dinâmica, Trabalho e Energia, Impulso e Momento.</p>
+                                    </div>
+                                )}
+                                {subTabECOMPO === "3a EM" && (
+                                    <div>
+                                        <h4 className="font-semibold mb-3">3a EM — Física Nuclear e de Partículas</h4>
+                                        {nuclearDoc}
+                                    </div>
+                                )}
+                            </LockedSection>
+                        );
+                    }
+
+                    if (activeTab === "SEPP") {
+                        return (
+                            <LockedSection tab="SEPP">
+                                <h3 className="text-2xl font-semibold mb-2">SEPP</h3>
+                                <p>Projetos de Física e Robótica. Clubes de ciência e oficinas.</p>
+                            </LockedSection>
+                        );
+                    }
+
+                    if (activeTab === "Aulas Particulares") {
+                        return (
+                            <div>
+                                <h3 className="text-2xl font-semibold mb-2">Aulas Particulares</h3>
+                                <p>
+                                    Aulas personalizadas de Física, Robótica e Programação. Entre em contato para
+                                    horários e planos.
+                                </p>
+                            </div>
+                        );
+                    }
+
+                    return null;
+                }
+
+                return (
+                    <div className="min-h-screen bg-gray-100">
+                        <header className="bg-white border-b">
+                            <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded bg-blue-600 text-white grid place-items-center font-bold">
+                                        H
+                                    </div>
+                                    <div>
+                                        <h1 className="text-xl font-bold">Prof. Humberto</h1>
+                                        <p className="text-sm text-gray-600">Física • Robótica • Programação</p>
+                                    </div>
+                                </div>
+                                <div className="hidden md:flex gap-2">
+                                    {TABS.map((t) => (
+                                        <button
+                                            key={t}
+                                            onClick={() => setActiveTab(t)}
+                                            className={
+                                                "px-3 py-2 rounded " +
+                                                (activeTab === t
+                                                    ? "bg-blue-600 text-white"
+                                                    : "hover:bg-gray-50")
+                                            }
+                                            title={
+                                                t === "Antônio Afonso" || t === "ECOMPO"
+                                                    ? `${t} (possui sub-abas: 1a EM, 2a EM, 3a EM)`
+                                                    : undefined
+                                            }
+                                        >
+                                            {t}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </header>
+
+                        <nav className="md:hidden bg-white border-b px-4 py-2">
+                            <select
+                                className="w-full border rounded px-3 py-2"
+                                value={activeTab}
+                                onChange={(e) => setActiveTab(e.target.value)}
+                            >
+                                {TABS.map((t) => (
+                                    <option key={t} value={t}>
+                                        {t}
+                                    </option>
+                                ))}
+                            </select>
+                        </nav>
+
+                        <main className="max-w-5xl mx-auto px-4 py-6">
+                            <Content />
+                            <div className="mt-8 p-4 bg-white border rounded">
+                                <p className="text-sm text-gray-700">
+                                    Dica do Assistente: As abas Monteiro, Antônio Afonso, ECOMPO e SEPP estão protegidas por
+                                    senha. Senhas: Monteiro ("lobatinho"), Antônio Afonso ("Afonso"), ECOMPO ("química"),
+                                    SEPP ("sousepp"). Em Antônio Afonso e ECOMPO há sub-abas: 1a EM, 2a EM e 3a EM.
+                                </p>
+                            </div>
+                        </main>
+
+                        <footer className="text-center text-xs text-gray-500 py-6">
+                            © {new Date().getFullYear()} Prof. Humberto — Site acadêmico demonstrativo.
+                        </footer>
+                    </div>
+                );
+            }
+
+            ReactDOM.render(<App />, document.getElementById('artifact_react'));
+        } catch(error) {
+            displayError('An error occurred while loading the application.');
+        }
+        window.addEventListener('error', function(event) {
+            displayError(event.message, event.error?.stack);
+        });
+        function displayError(message, stackInfo) {
+            const errorContainer = document.getElementById('error-container');
+            const errorMessage = document.createElement('div');
+            errorMessage.textContent = message;
+            errorContainer.appendChild(errorMessage);
+            if(stackInfo) {
+                const stackErrorMessage = document.createElement('pre');
+                stackErrorMessage.textContent = stackInfo.substring(0, 130);
+                errorContainer.appendChild(stackErrorMessage);
+            }
+            errorContainer.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
